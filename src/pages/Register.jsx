@@ -148,14 +148,14 @@ const Register = (props) => {
                                 <Button
                                     variant="primary"
                                     type="submit"
-                                    className="w-100 btn-lg"
+                                    className="w-100 btn-lg btn-custom"
                                 >
                                     Register
                                 </Button>
                                 <Link to="/" className="w-100">
                                     <Button
                                         variant="secondary"
-                                        className="w-100 btn-lg"
+                                        className="w-100 btn-lg btn-custom"
                                     >
                                         Back
                                     </Button>
