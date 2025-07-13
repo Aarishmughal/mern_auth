@@ -2,28 +2,34 @@ import axios from "axios";
 import React, { useState } from "react";
 import { Button, Card, FloatingLabel, Form } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
 
 const Login = (props) => {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+    const [inputValue, setInputValue] = useState({ email: "", password: "" });
     const navigate = useNavigate();
 
-    const handleOnSubmit = (event) => {
+    const handleOnChange = (e) => {
+        const { name, value } = e.target;
+        setInputValue({ ...inputValue, [name]: value });
+    };
+
+    const handleOnSubmit = async (event) => {
         event.preventDefault();
-        axios
-            .post(`${props.API_URL}/login`, { email, password })
-            .then((result) => {
-                console.log(result);
-                if (result.data === "Success") {
-                    navigate("/");
-                } else {
-                    navigate("/register");
-                    alert("You are not registered to this service.");
-                }
-            })
-            .catch((err) => {
-                console.log(err);
-            });
+        try {
+            const { data } = await axios.post(
+                `${props.API_URL}/login`,
+                inputValue,
+                { withCredentials: true }
+            );
+            if (data.message === "User logged in successfully") {
+                toast.success(data.message);
+                setTimeout(() => navigate("/"), 1000);
+            } else {
+                toast.error(data.message);
+            }
+        } catch (error) {
+            toast.error("Server error");
+        }
     };
     return (
         <div className="container d-flex justify-content-center align-items-center vh-100">
@@ -41,8 +47,8 @@ const Login = (props) => {
                                 type="email"
                                 placeholder="Email Address"
                                 name="email"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
+                                value={inputValue.email}
+                                onChange={handleOnChange}
                             />
                         </FloatingLabel>
                         <FloatingLabel label="Password">
@@ -50,8 +56,8 @@ const Login = (props) => {
                                 type="password"
                                 placeholder="Password"
                                 name="password"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
+                                value={inputValue.password}
+                                onChange={handleOnChange}
                             />
                         </FloatingLabel>
                         <div className="mt-3 d-flex justify-content-center align-items-center gap-2">
@@ -72,6 +78,7 @@ const Login = (props) => {
                             </Link>
                         </div>
                     </Form>
+                    <ToastContainer />
                     <p className="m-0 mt-2 small">
                         Not Already Registered?{" "}
                         <Link to={"/register"}>Register Now</Link>

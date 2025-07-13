@@ -2,30 +2,38 @@ import axios from "axios";
 import React, { useState } from "react";
 import { Button, Card, FloatingLabel, Form } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
 
 const Register = (props) => {
-    const [username, setUsername] = useState();
-    const [dob, setDob] = useState();
-    const [email, setEmail] = useState();
-    const [password, setPassword] = useState();
     const navigate = useNavigate();
+    const [inputValue, setInputValue] = useState({
+        email: "",
+        password: "",
+        username: "",
+    });
 
-    const handleOnSubmit = (event) => {
-        event.preventDefault();
-        axios
-            .post(`${props.API_URL}/register`, {
-                username,
-                dob,
-                email,
-                password,
-            })
-            .then((result) => {
-                console.log(result);
-                navigate("/login");
-            })
-            .catch((err) => {
-                console.log(err);
-            });
+    const handleOnChange = (e) => {
+        const { name, value } = e.target;
+        setInputValue({ ...inputValue, [name]: value });
+    };
+
+    const handleOnSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const { data } = await axios.post(
+                `${props.API_URL}/register`,
+                inputValue,
+                { withCredentials: true }
+            );
+            if (data.message === "User registered successfully") {
+                toast.success(data.message);
+                setTimeout(() => navigate("/"), 1000);
+            } else {
+                toast.error(data.message);
+            }
+        } catch (error) {
+            toast.error("Server error");
+        }
     };
     return (
         <>
@@ -52,10 +60,8 @@ const Register = (props) => {
                                             type="text"
                                             placeholder="Username"
                                             name="username"
-                                            value={username}
-                                            onChange={(e) =>
-                                                setUsername(e.target.value)
-                                            }
+                                            value={inputValue.username}
+                                            onChange={handleOnChange}
                                         />
                                     </FloatingLabel>
                                 </div>
@@ -68,10 +74,8 @@ const Register = (props) => {
                                             type="date"
                                             placeholder="Date of Birth"
                                             name="dob"
-                                            value={dob}
-                                            onChange={(e) =>
-                                                setDob(e.target.value)
-                                            }
+                                            value={inputValue.dob}
+                                            onChange={handleOnChange}
                                         />
                                     </FloatingLabel>
                                 </div>
@@ -86,10 +90,8 @@ const Register = (props) => {
                                             type="email"
                                             placeholder="Email Address"
                                             name="email"
-                                            value={email}
-                                            onChange={(e) =>
-                                                setEmail(e.target.value)
-                                            }
+                                            value={inputValue.email}
+                                            onChange={handleOnChange}
                                         />
                                     </FloatingLabel>
                                 </div>
@@ -102,10 +104,8 @@ const Register = (props) => {
                                             type="email"
                                             placeholder="Confirm Email Address"
                                             name="emailConfirmation"
-                                            value={email}
-                                            onChange={(e) =>
-                                                setEmail(e.target.value)
-                                            }
+                                            value={inputValue.email}
+                                            onChange={handleOnChange}
                                         />
                                     </FloatingLabel>
                                 </div>
@@ -120,10 +120,8 @@ const Register = (props) => {
                                             type="password"
                                             placeholder="Password"
                                             name="password"
-                                            value={password}
-                                            onChange={(e) =>
-                                                setPassword(e.target.value)
-                                            }
+                                            value={inputValue.password}
+                                            onChange={handleOnChange}
                                         />
                                     </FloatingLabel>
                                 </div>
@@ -136,10 +134,8 @@ const Register = (props) => {
                                             type="password"
                                             placeholder="Confirm Password"
                                             name="passwordConfirmation"
-                                            value={password}
-                                            onChange={(e) =>
-                                                setPassword(e.target.value)
-                                            }
+                                            value={inputValue.password}
+                                            onChange={handleOnChange}
                                         />
                                     </FloatingLabel>
                                 </div>
@@ -162,6 +158,7 @@ const Register = (props) => {
                                 </Link>
                             </div>
                         </Form>
+                        <ToastContainer />
                         <p className="m-0 mt-2 small">
                             Already Registered?{" "}
                             <Link to={"/login"}>Login Now</Link>
