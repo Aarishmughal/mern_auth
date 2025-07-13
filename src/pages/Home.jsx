@@ -26,9 +26,9 @@ const Home = () => {
                                         width="120"
                                         height="120"
                                     />
-                                    <h2 className="ms-2">
+                                    <h2 className="ms-2 text-white">
                                         Login{" "}
-                                        <i className="bi bi-arrow-up-right"></i>
+                                        <i className="bi bi-arrow-right"></i>
                                     </h2>
                                 </Card>
                             </Link>
@@ -46,9 +46,9 @@ const Home = () => {
                                         width="120"
                                         height="120"
                                     />
-                                    <h2 className="m-2">
+                                    <h2 className="m-2 text-white">
                                         Register{" "}
-                                        <i className="bi bi-arrow-up-right"></i>
+                                        <i className="bi bi-arrow-right"></i>
                                     </h2>
                                 </Card>
                             </Link>
