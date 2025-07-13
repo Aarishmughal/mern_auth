@@ -13,6 +13,7 @@ mongoose.connect(`${mongodb_url}/mern_auth`);
 // Creating Routes
 app.post("/login", (req, res) => {
     const { email, password } = req.body;
+    // UserModel.findOne({ $or: [{ email: email }, { username: email }] }).then(
     UserModel.findOne({ email: email }).then((user) => {
         if (user) {
             if (user.password === password) {
